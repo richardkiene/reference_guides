@@ -30,7 +30,12 @@ tmux -CC attach -t mysession
 **Windows** → Like browser tabs within a session  
 **Panes** → Split views within a window  
 
-**Default Prefix Key:** `Ctrl-b` (shown as `C-b` below)
+**Default Prefix Key:** `Ctrl+b` (shown as `C-b` below)
+
+**Key Notation:** 
+- `C-b` = `Ctrl+b`
+- `C-b d` = Press `Ctrl+b`, release, then press `d`
+- `C-b C-←` = Press `Ctrl+b`, release, then `Ctrl+←` (hold Ctrl)
 
 ---
 
