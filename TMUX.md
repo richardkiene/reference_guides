@@ -148,36 +148,107 @@ bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'
 
 ## ⚙️ iTerm2-Optimized Configuration
 
+### How to Apply This Configuration
+**Step 1:** Create or edit your tmux config file:
+```bash
+# Create the file if it doesn't exist
+touch ~/.tmux.conf
+
+# Open in your preferred editor
+nano ~/.tmux.conf
+# or
+code ~/.tmux.conf
+# or  
+vim ~/.tmux.conf
+```
+
+**Step 2:** Add the configuration below to `~/.tmux.conf`
+
+**Step 3:** Reload tmux configuration:
+```bash
+# If tmux is running, reload config
+tmux source-file ~/.tmux.conf
+
+# Or restart tmux entirely
+tmux kill-server
+tmux
+```
+
 ### Essential `.tmux.conf` for iTerm2
 ```bash
-# Enable iTerm2 integration features
+# ===== COLOR & TERMINAL SUPPORT =====
+# Enables full color support - makes colors look right in iTerm2
 set-option -g default-terminal "screen-256color"
 set-option -sa terminal-overrides ",xterm*:Tc"
 
-# Better mouse support for iTerm2
+# ===== MOUSE SUPPORT =====
+# Lets you click panes, scroll with trackpad, drag borders
 set -g mouse on
 
-# Enable clipboard integration with macOS
+# ===== MACOS CLIPBOARD INTEGRATION =====
+# Makes copy/paste work with macOS clipboard (requires reattach-to-user-namespace)
+# Install with: brew install reattach-to-user-namespace
 set-option -g default-command "reattach-to-user-namespace -l $SHELL"
 
-# Fix for iTerm2 copy/paste
+# ===== COPY MODE IMPROVEMENTS =====
+# When you copy text in tmux, also copy to macOS clipboard
 bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
 bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
 
-# Start windows and panes at 1, not 0
+# ===== NUMBERING =====
+# Start windows and panes at 1 instead of 0 (easier to reach on keyboard)
 set -g base-index 1
 setw -g pane-base-index 1
 
-# Reload config file
+# ===== CONVENIENCE =====
+# Reload config file with Ctrl+b, r
 bind r source-file ~/.tmux.conf \; display-message "Config reloaded!"
 
-# Better pane splitting (more intuitive)
+# ===== BETTER SPLITTING =====
+# More intuitive split commands (| for vertical, - for horizontal)
+# Also opens new panes in current directory
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
 
-# New windows in current path
+# ===== NEW WINDOWS IN CURRENT PATH =====
+# When you create new windows, start in the same directory
 bind c new-window -c "#{pane_current_path}"
 ```
+
+### Required Dependencies
+```bash
+# Install reattach-to-user-namespace for clipboard integration
+brew install reattach-to-user-namespace
+
+# Verify installation
+which reattach-to-user-namespace
+```
+
+### Why Each Setting Matters
+
+**Color Support (`default-terminal` & `terminal-overrides`):**
+- **Problem:** Without these, colors may look washed out or wrong
+- **Solution:** Enables full 24-bit color support in iTerm2
+
+**Mouse Support (`mouse on`):**
+- **Problem:** Can't click panes or scroll naturally  
+- **Solution:** Makes tmux feel more like a native macOS app
+
+**Clipboard Integration (`default-command` & copy bindings):**
+- **Problem:** Tmux copy/paste doesn't work with Cmd+C/Cmd+V
+- **Solution:** Seamlessly integrates with macOS clipboard
+
+**Better Numbering (`base-index`):**
+- **Problem:** Ctrl+b, 0 is hard to reach for first window
+- **Solution:** Windows/panes start at 1, matching keyboard layout
+
+**Intuitive Splits (`bind | split-window`):**
+- **Problem:** % and " are hard to remember
+- **Solution:** | looks like vertical split, - looks like horizontal split
+
+**Current Path Behavior:**
+- **Problem:** New windows/panes start in home directory
+- **Solution:** Start where you are currently working
 
 ### iTerm2 Profile Settings
 **In iTerm2 Preferences:**
